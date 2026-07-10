@@ -1,0 +1,370 @@
+<!DOCTYPE html>
+<html lang="fa" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>پرداخت - جزوه‌شاپ</title>
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        .checkout-container {
+            max-width: 550px;
+            margin: 40px auto;
+            padding: 0 20px;
+        }
+        .checkout-container h1 {
+            color: #1a237e;
+            margin-bottom: 25px;
+        }
+
+        .payment-box {
+            background: white;
+            padding: 30px;
+            border-radius: 16px;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.08);
+        }
+        .payment-box h2 {
+            color: #1a237e;
+            margin-bottom: 20px;
+            font-size: 20px;
+        }
+
+        .payment-box label {
+            display: block;
+            font-weight: bold;
+            margin-top: 18px;
+            margin-bottom: 6px;
+            font-size: 14px;
+        }
+
+        .payment-box input {
+            width: 100%;
+            padding: 12px 16px;
+            border: 2px solid #e0e0e0;
+            border-radius: 10px;
+            font-size: 16px;
+            font-family: inherit;
+            transition: border-color 0.3s;
+            background: #fafafa;
+        }
+
+        .payment-box input:focus {
+            border-color: #1a237e;
+            outline: none;
+            background: white;
+        }
+
+        .payment-box .total-pay {
+            font-size: 22px;
+            font-weight: bold;
+            color: #e65100;
+            text-align: center;
+            padding: 15px;
+            background: #f5f7fa;
+            border-radius: 12px;
+            margin: 15px 0 20px;
+            border: 2px dashed #ff8f00;
+        }
+
+        .payment-box .total-pay span {
+            font-size: 26px;
+        }
+
+        .btn-pay {
+            background: #1a237e;
+            color: white;
+            border: none;
+            padding: 16px;
+            border-radius: 12px;
+            font-size: 20px;
+            font-weight: bold;
+            width: 100%;
+            cursor: pointer;
+            transition: background 0.3s, transform 0.2s;
+            margin-top: 20px;
+        }
+
+        .btn-pay:hover {
+            background: #0d47a1;
+            transform: scale(1.01);
+        }
+
+        .secure-badge {
+            text-align: center;
+            margin-top: 15px;
+            color: #4caf50;
+            font-size: 14px;
+        }
+
+        .note {
+            font-size: 13px;
+            color: #888;
+            margin-top: 10px;
+            text-align: center;
+        }
+
+        .back-link {
+            display: inline-block;
+            margin-bottom: 15px;
+            color: #1a237e;
+            text-decoration: none;
+        }
+        .back-link:hover {
+            text-decoration: underline;
+        }
+
+        /* ===== مودال موفقیت ===== */
+        .success-modal {
+            display: none;
+            position: fixed;
+            top: 0;
+            left: 0;
+            right: 0;
+            bottom: 0;
+            background: rgba(0,0,0,0.6);
+            justify-content: center;
+            align-items: center;
+            z-index: 999;
+            backdrop-filter: blur(4px);
+        }
+        .success-modal.active {
+            display: flex;
+        }
+
+        .success-box {
+            background: white;
+            padding: 40px;
+            border-radius: 24px;
+            text-align: center;
+            max-width: 450px;
+            width: 90%;
+            animation: popIn 0.4s ease;
+            box-shadow: 0 20px 60px rgba(0,0,0,0.3);
+        }
+
+        @keyframes popIn {
+            0% { transform: scale(0.8) translateY(20px); opacity: 0; }
+            100% { transform: scale(1) translateY(0); opacity: 1; }
+        }
+
+        .success-box .icon {
+            font-size: 70px;
+            display: block;
+            margin-bottom: 10px;
+        }
+
+        .success-box h2 {
+            color: #2e7d32;
+            font-size: 28px;
+            margin-bottom: 8px;
+        }
+
+        .success-box .sub {
+            color: #555;
+            margin: 10px 0 5px;
+            font-size: 15px;
+        }
+
+        .success-box .download-list {
+            margin: 20px 0;
+            text-align: right;
+        }
+
+        .success-box .download-list .dl-item {
+            background: #f5f7fa;
+            padding: 12px 16px;
+            border-radius: 10px;
+            margin-bottom: 10px;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+
+        .success-box .download-list .dl-item .dl-name {
+            font-size: 14px;
+            color: #333;
+        }
+
+        .success-box .download-list .dl-item .dl-btn {
+            background: #2e7d32;
+            color: white;
+            border: none;
+            padding: 8px 18px;
+            border-radius: 8px;
+            cursor: pointer;
+            font-size: 13px;
+            font-weight: bold;
+            text-decoration: none;
+            transition: background 0.3s;
+        }
+
+        .success-box .download-list .dl-item .dl-btn:hover {
+            background: #1b5e20;
+        }
+
+        .success-box .btn-home {
+            background: #1a237e;
+            color: white;
+            border: none;
+            padding: 12px 35px;
+            border-radius: 30px;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+            transition: background 0.3s;
+            margin-top: 10px;
+        }
+
+        .success-box .btn-home:hover {
+            background: #0d47a1;
+        }
+    </style>
+</head>
+<body>
+
+    <header>
+        <nav>
+            <div class="logo">📚 جزوه‌<span>شاپ</span></div>
+            <ul class="menu">
+                <li><a href="index.html">خانه</a></li>
+                <li><a href="products.html">محصولات</a></li>
+                <li><a href="cart.html" class="cart-link">🛒 سبد خرید</a></li>
+            </ul>
+        </nav>
+    </header>
+
+    <div class="checkout-container">
+        <a href="cart.html" class="back-link">← بازگشت به سبد خرید</a>
+        <h1>💳 پرداخت</h1>
+
+        <div class="payment-box">
+            <h2>اطلاعات پرداخت</h2>
+
+            <div class="total-pay">
+                💰 مبلغ قابل پرداخت: <span id="pay-total">۰</span> تومان
+            </div>
+
+            <label>💳 شماره کارت</label>
+            <input type="text" id="card-number" placeholder="مثلاً ۶۰۳۷ ۷۹۹۷ ۳۰۵۰ ۹۴۰۲" maxlength="19" dir="ltr">
+
+            <label>🔑 رمز دوم (۴ رقم)</label>
+            <input type="password" id="password" placeholder="رمز دوم خود را وارد کنید" maxlength="4" dir="ltr">
+
+            <button class="btn-pay" onclick="processPayment()">✅ پرداخت و دانلود</button>
+
+            <div class="secure-badge">🔒 اتصال امن | پرداخت با گواهی SSL</div>
+            <div class="note">* این یک محیط آزمایشی است. هیچ مبلغی کسر نمی‌شود.</div>
+        </div>
+    </div>
+
+    <!-- ===== مودال موفقیت ===== -->
+    <div class="success-modal" id="successModal">
+        <div class="success-box">
+            <span class="icon">🎉</span>
+            <h2>پرداخت موفق</h2>
+            <p class="sub">جزوه(های) شما آماده دانلود است. با تشکر از خرید شما!</p>
+
+            <div class="download-list" id="download-list">
+                <!-- لینک‌های دانلود توسط جاوااسکریپت پر می‌شوند -->
+            </div>
+
+            <button class="btn-home" onclick="goHome()">🏠 بازگشت به صفحه اصلی</button>
+        </div>
+    </div>
+
+    <footer>
+        <p>© ۱۴۰۴ - جزوه‌شاپ</p>
+    </footer>
+
+    <script>
+        // ===== محاسبه قیمت کل از سبد خرید =====
+        let purchasedItems = [];
+
+        async function loadTotal() {
+            try {
+                const response = await fetch('data/products.json');
+                const products = await response.json();
+                const cart = JSON.parse(localStorage.getItem('cart')) || [];
+
+                let total = 0;
+                purchasedItems = [];
+
+                cart.forEach(item => {
+                    const product = products.find(p => p.id === item.id);
+                    if (product) {
+                        total += product.price * item.quantity;
+                        purchasedItems.push({
+                            ...product,
+                            quantity: item.quantity
+                        });
+                    }
+                });
+
+                document.getElementById('pay-total').textContent = total.toLocaleString();
+            } catch (error) {
+                console.error('خطا:', error);
+            }
+        }
+
+        // ===== پردازش پرداخت =====
+        function processPayment() {
+            const card = document.getElementById('card-number').value.replace(/\s/g, '');
+            const password = document.getElementById('password').value;
+
+            // اعتبارسنجی ساده
+            if (card.length < 16) {
+                alert('❌ لطفاً شماره کارت را به درستی وارد کنید (۱۶ رقم)');
+                return;
+            }
+            if (password.length < 4) {
+                alert('❌ لطفاً رمز دوم را وارد کنید (۴ رقم)');
+                return;
+            }
+
+            // پرداخت موفق
+            document.getElementById('successModal').classList.add('active');
+
+            // نمایش دکمه‌های دانلود
+            const list = document.getElementById('download-list');
+            list.innerHTML = purchasedItems.map(item => `
+                <div class="dl-item">
+                    <span class="dl-name">📘 ${item.title}</span>
+                    <a href="${item.pdf}" class="dl-btn" download>📥 دانلود</a>
+                </div>
+            `).join('');
+
+            // خالی کردن سبد خرید
+            localStorage.removeItem('cart');
+            updateCartCount();
+        }
+
+        // ===== رفتن به صفحه اصلی =====
+        function goHome() {
+            window.location.href = 'index.html';
+        }
+
+        // ===== بروزرسانی تعداد سبد خرید =====
+        function updateCartCount() {
+            const cart = JSON.parse(localStorage.getItem('cart')) || [];
+            const total = cart.reduce((sum, item) => sum + item.quantity, 0);
+            const cartLinks = document.querySelectorAll('.cart-link');
+            cartLinks.forEach(link => {
+                link.textContent = `🛒 سبد خرید (${total})`;
+            });
+        }
+
+        // ===== بستن مودال با کلیک خارج =====
+        document.getElementById('successModal').addEventListener('click', function(e) {
+            if (e.target === this) {
+                this.classList.remove('active');
+            }
+        });
+
+        // ===== بارگذاری اولیه =====
+        document.addEventListener('DOMContentLoaded', () => {
+            loadTotal();
+            updateCartCount();
+        });
+    </script>
+
+</body>
+</html>
